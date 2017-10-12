@@ -17,11 +17,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^$', include('apps.df_goods.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^user/', include('apps.df_user.urls')),
     url(r'^goods/', include('apps.df_goods.urls')),
     url(r'^cart/', include('apps.df_cart.urls')),
     url(r'^order/', include('apps.df_order.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
+    url(r'^', include('apps.df_goods.urls')),
+    # url(r'^search/', include('haystack.urls')),
 ]

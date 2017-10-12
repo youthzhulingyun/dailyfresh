@@ -4,6 +4,7 @@ from django.shortcuts import render
 from apps.df_cart.models import CartInfo
 from apps.df_user.models import UserInfo
 from .models import *
+from haystack.views import SearchView
 
 # Create your views here.
 def index(request):
@@ -101,3 +102,16 @@ def list(request,n,o,p):
 
     context = {'uname': username,'n':n,'o':o,'p':p,'goods':goods,'plist':plist,'goods_new':goods_new,'cart_count':cart_count}
     return render(request, 'df_goods/list.html', context)
+
+
+class MySearchView(SearchView):
+    def extra_context(self):
+        context = super().extra_context()
+        username = self.request.session.get('username')
+        user = UserInfo.objects.get(uname=username)
+        cart_count = CartInfo.objects.filter(user=user).count()
+        context['uname'] = username
+        context['cart_count'] = cart_count
+        return context
+
+
