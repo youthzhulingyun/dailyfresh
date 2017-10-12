@@ -1,0 +1,39 @@
+{% extends 'base_user.html' %}
+
+{% block body %}
+    <script>
+        $("#shouhuodizhi").addClass("active").siblings().removeClass("active")
+    </script>
+		<div class="right_content clearfix">
+				<h3 class="common_title2">收货地址</h3>
+				<div class="site_con">
+					<dl>
+						<dt>当前地址：</dt>
+						<dd>{{ user.uaddress }} &nbsp; ({{ user.uconsignee }} &nbsp;收 ) &nbsp;{{ user.uphone }}</dd>					</dl>
+				</div>
+				<h3 class="common_title2">编辑地址</h3>
+				<div class="site_con">
+					<form action="/user/site_handle/" method="get">
+						<div class="form_group">
+							<label>收件人：</label>
+							<input type="text" name="" value="{{ uname }}">
+						</div>
+						<div class="form_group form_group2">
+							<label>详细地址：</label>
+							<textarea name="site_area" class="site_area">{{ uaddress }}</textarea>
+						</div>
+						<div class="form_group">
+							<label>邮编：</label>
+							<input type="text" name="upostcode" value="{{ upostcode }}">
+						</div>
+						<div class="form_group">
+							<label>手机：</label>
+							<input type="text" name="uphone" value="{{ uphone }}">
+						</div>
+
+						<input type="submit" name="" value="提交" class="info_submit">
+					</form>
+				</div>
+		</div>
+	</div>
+{% endblock %}

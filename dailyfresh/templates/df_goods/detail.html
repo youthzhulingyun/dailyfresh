@@ -1,0 +1,154 @@
+{% extends "base_goods.html" %}
+{% block title %}{% endblock %}
+{% block head %}{% endblock %}
+{% block body %}
+	<div class="navbar_con">
+		<div class="navbar clearfix">
+			<div class="subnav_con fl">
+				<h1>全部商品分类</h1>
+				<span></span>
+				<ul class="subnav">
+					<li><a href="#" class="fruit">新鲜水果</a></li>
+					<li><a href="#" class="seafood">海鲜水产</a></li>
+					<li><a href="#" class="meet">猪牛羊肉</a></li>
+					<li><a href="#" class="egg">禽类蛋品</a></li>
+					<li><a href="#" class="vegetables">新鲜蔬菜</a></li>
+					<li><a href="#" class="ice">速冻食品</a></li>
+				</ul>
+			</div>
+			<ul class="navlist fl">
+				<li><a href="">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="breadcrumb">
+		<a href="#">全部分类</a>
+		<span>></span>
+		<a href="#">新鲜水果</a>
+		<span>></span>
+		<a href="#">商品详情</a>
+	</div>
+
+	<div class="goods_detail_con clearfix">
+		<div class="goods_detail_pic fl"><img src="/static/media/{{ good.gpic }}" width="350px"></div>
+
+		<div class="goods_detail_list fr">
+			<h3>{{ good.gtitle }}</h3>
+			<p>{{ good.gcontent|safe }}</p>
+			<div class="prize_bar">
+				<span class="show_pirze">¥<em>{{ good.gprice }}</em></span>
+				<span class="show_unit">单  位：{{ good.gunit }}</span>
+			</div>
+			<div class="goods_num clearfix">
+				<div class="num_name fl">数 量：</div>
+				<div class="num_add fl">
+					<input type="text" class="num_show fl" value="1">
+					<a href="javascript:;" class="add fr">+</a>
+					<a href="javascript:;" class="minus fr">-</a>
+                    <script>
+                        $(function () {
+                            $(".num_add a").eq(0).click(function () {
+                                if(isNaN(parseInt($(".num_add input").val())) == false){
+
+                                    $(".num_add input").val(parseInt($(".num_add input").val()))
+                                    $(".num_add input").val($(".num_add input").val() - -1)
+                                    $(".total em").html($(".num_add input").val()*parseFloat({{ good.gprice }})+"元")
+                                }
+                            })
+
+                            $(".num_add a").eq(1).click(function () {
+                                if (parseInt($(".num_add input").val()) > 0 ) {
+                                    $(".num_add input").val(parseInt($(".num_add input").val()))
+                                    $(".num_add input").val($(".num_add input").val() - 1)
+                                    $(".total em").html($(".num_add input").val()*parseFloat({{ good.gprice }})+"元")
+                                }
+                            })
+
+                            $(".num_add input").keyup(function () {
+                                if(isNaN(parseInt($(".num_add input").val()))){
+                                    $(".total em").html("0元")
+                                }else{
+                                    $(".num_add input").val(parseInt($(".num_add input").val()))
+                                    $(".total em").html(parseInt($(".num_add input").val())*parseFloat({{ good.gprice }})+"元")
+                                }
+                            })
+                        })
+                    </script>
+				</div> 
+			</div>
+			<div class="total">总价：<em>{{ good.gprice }}元</em></div>
+			<div class="operate_btn">
+				<a href="javascript:;" class="buy_btn">立即购买</a>
+                {% if uname == "" %}
+                    <a href="/cart/add/{{ good.id }}/" class="add_cart" id="add_cart">加入购物车</a>
+                {% else %}
+                    <a href="javascript:$.get('/cart/add/{{ good.id }}_' + $('.goods_num .num_show').val() +'/',function(data) { $('.goods_count').text(data['count']) });" class="add_cart" id="add_cart">加入购物车</a>
+                {% endif %}
+
+			</div>
+		</div>
+	</div>
+
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>新品推荐</h3>
+				<ul>
+                    {% for good in goods_new %}
+                        {% if forloop.counter < 3 %}
+                            <li>
+                                <a href="/goods/{{ good.id }}"><img src="/static/media/{{ good.gpic }}"></a>
+                                <h4><a href="#">{{ good.gtitle }}</a></h4>
+                                <div class="prize">￥{{ good.gprice }}</div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+				</ul>
+			</div>
+		</div>
+
+		<div class="r_wrap fr clearfix">
+			<ul class="detail_tab clearfix">
+				<li class="active">商品介绍</li>
+				<li>评论</li>
+			</ul>
+
+			<div class="tab_content">
+				<dl>
+					<dt>商品详情：</dt>
+					<dd>{{ good.gcontent|safe}}</dd>
+				</dl>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="add_jump"></div>
+
+{#	<script type="text/javascript" src="/static/js/jquery-1.12.2.js"></script>#}
+	<script type="text/javascript">
+		var $add_x = $('#add_cart').offset().top;
+		var $add_y = $('#add_cart').offset().left;
+
+		var $to_x = $('#show_count').offset().top;
+		var $to_y = $('#show_count').offset().left;
+
+		$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+		$('#add_cart').click(function(){
+			$(".add_jump").stop().animate({
+				'left': $to_y+7,
+				'top': $to_x+7},
+				"fast", function() {
+					$(".add_jump").fadeOut('fast',function(){
+{#						$('#show_count').html(parseInt($('#show_count').html())+1);#}
+					});
+
+			});
+		})
+	</script>
+{% endblock %}

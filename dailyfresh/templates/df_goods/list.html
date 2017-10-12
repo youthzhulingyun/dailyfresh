@@ -1,0 +1,112 @@
+{% extends "base_goods.html" %}
+{% block title %}{% endblock %}
+{% block head %}{% endblock %}
+{% block body %}
+	<div class="navbar_con">
+		<div class="navbar clearfix">
+			<div class="subnav_con fl">
+				<h1>全部商品分类</h1>
+				<span></span>
+				<ul class="subnav">
+					<li><a href="#" class="fruit">新鲜水果</a></li>
+					<li><a href="#" class="seafood">海鲜水产</a></li>
+					<li><a href="#" class="meet">猪牛羊肉</a></li>
+					<li><a href="#" class="egg">禽类蛋品</a></li>
+					<li><a href="#" class="vegetables">新鲜蔬菜</a></li>
+					<li><a href="#" class="ice">速冻食品</a></li>
+				</ul>
+			</div>
+			<ul class="navlist fl">
+				<li><a href="">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="breadcrumb">
+		<a href="#">全部分类</a>
+		<span>></span>
+		<a href="#">新鲜水果</a>
+	</div>
+
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>新品推荐</h3>
+				<ul>
+                    {% for good in goods_new %}
+                        {% if forloop.counter < 3 %}
+                            <li>
+                                <a href="/goods/{{ good.id }}"><img src="/static/media/{{ good.gpic }}"></a>
+                                <h4><a href="#">{{ good.gtitle }}</a></h4>
+                                <div class="prize">￥{{ good.gprice }}</div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+				</ul>
+			</div>
+		</div>
+
+		<div class="r_wrap fr clearfix">
+			<div class="sort_bar">
+				<a href="/goods/list{{ n }}_1_1/">默认</a>
+				<a href="/goods/list{{ n }}_2_1/">价格</a>
+				<a href="/goods/list{{ n }}_3_1/">人气</a>
+                <script>
+                    {% if o == '1' %}
+                        $(".sort_bar a").eq(0).addClass("active")
+                    {% elif o == '2' %}
+                        $(".sort_bar a").eq(1).addClass("active")
+                    {% elif o == '3' %}
+                        $(".sort_bar a").eq(2).addClass("active")
+                    {% endif %}
+                </script>
+			</div>
+
+			<ul class="goods_type_list clearfix">
+                {% for good in goods %}
+                    <li>
+                        <a href="/goods/{{ good.id }}/"><img src="/static/media/{{ good.gpic }}/"></a>
+                        <h4><a href="/goods/{{ good.id }}/">{{ good.gtitle }}</a></h4>
+                        <div class="operate">
+                            <span class="prize">￥{{ good.gprice }}</span>
+                            <span class="unit">{{ good.gprice }}/{{ good.gunit }}</span>
+                            {% if uname == "" %}
+                                <a href="/cart/add/{{ good.id }}/" class="add_goods" title="加入购物车"></a>
+                            {% else %}
+                                <a href="javascript:$.get('/cart/add/{{ good.id }}/',function(data) { $('.goods_count').text(data['count']) });" class="add_goods" title="加入购物车"></a>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+			</ul>
+
+			<div class="pagenation">
+                {% if goods.has_previous %}
+                    <a href="/goods/list{{ n }}_{{ o }}_{{ p|add:-1 }}/">上一页</a>
+                {% else %}
+                    <a href="javascript:;">上一页</a>
+                {% endif %}
+
+                {% for page in plist %}
+                    {% if page == p %}
+                        <a href="javascript:;" class="active">{{ page }}</a>
+                    {% else %}
+                        <a href="/goods/list{{ n }}_{{ o }}_{{ page }}/" >{{ page }}</a>
+                    {% endif %}
+
+                {% endfor %}
+
+                {% if goods.has_next %}
+                    <a href="/goods/list{{ n }}_{{ o }}_{{ p|add:1 }}/">下一页></a>
+                {% else %}
+                    <a href="javascript:;">下一页</a>
+                {% endif %}
+
+			</div>
+		</div>
+	</div>
+{% endblock %}
